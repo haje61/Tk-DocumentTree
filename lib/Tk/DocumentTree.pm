@@ -542,6 +542,16 @@ Hans Jeuken (hanje at cpan dot org)
 
 Unknown. If you find any, please contact the author.
 
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Tk::ITree>
+
+=item L<Tk::Tree>
+
+=back
+
 =cut
 
 1;
