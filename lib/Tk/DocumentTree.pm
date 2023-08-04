@@ -8,7 +8,7 @@ Tk::DocumentTree - ITree based document list
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use base qw(Tk::Derived Tk::Frame);
 
@@ -125,10 +125,11 @@ sub Add {
 		);
 	} else {
 		my $sep = $self->cget('-separator');
+		my $nsep = quotemeta($sep);
 
 		my $name = '';
 		my @path = ($new);
-		@path = split /$sep/, $new if $new =~ /$sep/;
+		@path = split /$nsep/, $new if $new =~ /$nsep/;
 
 		while (@path) {
 			my $title = shift @path;
@@ -242,10 +243,12 @@ sub entryAdd {
 	if ($untracked) {
 		$type = 'untracked';
 	} else {
-		my $sep = $self->cget('-separator');
+		my $sep = quotemeta($self->cget('-separator'));
 		$new =~ s/^$sep// unless $Config{osname} eq 'MSWin32';
-		my $compath = $self->GetCommonPath($new);
-		$new =~ s/^$compath$sep//
+		my $compath = quotemeta($self->GetCommonPath($new));
+		my $reg = $compath . $sep;
+		print "$reg\n";
+		$new =~ s/^$reg//
 	}
 
 	$self->Add($new, $type);
@@ -320,7 +323,6 @@ sub fileList {
 
 sub GetCommonPath {
 	my ($self, $new) = @_;
-	my $sep = $self->cget('-separator');
 
 	my @items = $self->ItemList;
 	my @files = ();
@@ -333,6 +335,7 @@ sub GetCommonPath {
 	push @xfiles, $new if defined $new;
 
 	my @ifiles = ();
+	my $sep = quotemeta($self->cget('-separator'));
 	for (@xfiles) {
 		my $file = $_;
 		$file = $self->GetParent($file);
@@ -385,7 +388,8 @@ sub GetCommonPath {
 		}
 		for (@files) {
 			my $item = $_;
-			$item =~ s/^$newpath$sep// unless $newpath eq '';
+			my $reg = quotemeta($newpath) . $sep;
+			$item =~ s/^$reg// unless $newpath eq '';
 			$self->Add($item);
 		}
 	}
@@ -429,7 +433,7 @@ sub GetParent {
 sub GetPath {
 	my $self = shift;
 	my $path = $self->Subwidget('PATH')->cget('-text');
-	my $sep = $self->cget('-separator');
+	my $sep = quotemeta($self->cget('-separator'));
 	$path =~ s/^$sep//;
 	return $path;
 }
