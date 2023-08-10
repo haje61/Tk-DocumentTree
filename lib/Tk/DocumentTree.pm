@@ -8,7 +8,7 @@ Tk::DocumentTree - ITree based document list
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 use base qw(Tk::Derived Tk::Frame);
 
@@ -506,8 +506,8 @@ sub SetPath {
 
 sub StripPath {
 	my ($self, $name) = @_;
-	my $path = $self->GetPath;
-	my $sep = $self->cget('-separator');
+	my $path = quotemeta($self->GetPath);
+	my $sep = quotemeta($self->cget('-separator'));
 	$name =~ s/^$path$sep// if $path ne '';
 	return $name;
 }
