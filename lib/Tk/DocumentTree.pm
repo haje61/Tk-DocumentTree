@@ -427,6 +427,7 @@ sub entryShow {
 		$self->open($parent);
 		$parent = $self->infoParent($parent);
 	}
+	$self->see($entry);
 }
 
 =item B<expandAll>
